@@ -36,6 +36,36 @@ Este projeto é uma aplicação simples que permite ao professor lançar e visua
 
 - **Geração de PDF**:
   - A função `gerarPDF()` utiliza jsPDF e AutoTable para criar e formatar o PDF.
+ ```js
+function gerarPDF() {
+    const { jsPDF } = window.jspdf; // Assegura que jsPDF está acessível
+    const doc = new jsPDF();
+    
+    doc.text('Notas dos Alunos', 20, 10);
+    
+    const tableBody = document.getElementById('table-body');
+    const rows = Array.from(tableBody.rows);
+
+    const pdfRows = [['Nome', 'Série', 'Disciplina', 'Nota 1º Trimestre', 'Nota 2º Trimestre', 'Nota 3º Trimestre', 'Nota 4º Trimestre']];
+
+    rows.forEach(row => {
+        const cols = Array.from(row.cells).map(cell => cell.textContent);
+        pdfRows.push(cols);
+    });
+
+    doc.autoTable({
+        head: pdfRows.slice(0, 1),
+        body: pdfRows.slice(1),
+        startY: 20,
+        margin: { horizontal: 10 },
+    });
+
+    // Salva o PDF
+    doc.save('notas_alunos.pdf');
+}
+```
+
+  - 
   - A tabela exibida na "Área do Aluno" é convertida em um formato que o AutoTable usa para preencher o PDF, garantindo que todas as informações estejam organizadas e formatadas.
   - Ao final, o PDF é salvo no dispositivo do usuário com o nome `notas_alunos.pdf`.
 
